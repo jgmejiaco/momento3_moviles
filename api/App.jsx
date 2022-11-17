@@ -9,6 +9,7 @@ export default function App() {
   const [nombre,setNombre] = useState('');
   const [correoe,setCorreoE] = useState('');
   const [totalComision,setTotalComision] = useState('');
+  const url_api = 'http://192.168.43.12:3000/api/vendedor';
 
   // const getUser = async () => {
   //    try {
@@ -29,10 +30,10 @@ export default function App() {
     }
     setLoading(true);
     try {
-      const response = await axios.post(`http://192.168.1.113:3000/api/vendedor`, {
+      const response = await axios.post(url_api, {
         nombre,
         correoe,
-        totalcomision
+        totalComision
       });
       alert("Vendedor agregado correctamente ...")
     } catch (error) {
@@ -50,10 +51,10 @@ export default function App() {
     }
     setLoading(true);
     try {
-      const response = await axios.put(`http://192.168.1.113:3000/api/vendedor/${id}`, {
+      const response = await axios.put(`${url_api}/${id}`, {
         nombre,
         correoe,
-        totalcomision
+        totalComision
       });
       alert("Vendedor actualizado correctamente ...")
     } catch (error) {
@@ -68,7 +69,7 @@ export default function App() {
     setLoading(true);
     try {
       if (confirm("Está seguro de eliminar el Vendedor")) {
-        const response = await axios.delete(`http://192.168.1.113:3000/api/vendedor/${id}`);
+        const response = await axios.delete(`${url_api}/${id}`);
         alert("Vendedor eliminado correctamente ...")  
       }
     } catch (error) {
@@ -82,7 +83,7 @@ export default function App() {
   const getVendedor = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://192.168.1.113:3000/api/vendedor`);
+      const response = await axios.get(url_api);
       setData(response.data)
     } catch (error) {
       console.log(error)
@@ -94,11 +95,11 @@ export default function App() {
 
   const getVendedorPorId = async (id) => {
     try{
-      const response = await axios.get(`http://192.168.1.113:3000/api/vendedor/${id}`);
+      const response = await axios.get(`url_api/${id}`);
       setData(response.data) 
       setNombre(response.data.nombre);
-      setCorreoe(response.data.correoe);
-      setTotalComision(response.data.totalcomision);
+      setCorreoE(response.data.correoe);
+      setTotalComision(response.data.totalComision);
     }
     catch(error){
       console.log(error)
@@ -139,7 +140,7 @@ export default function App() {
         style={[styles.buttons,{backgroundColor:'green'}]}
         onPress={()=>getVendedor()}
       >
-        <Text style={{color:'yellow'}}>Listar Clientes</Text>
+        <Text style={{color:'yellow'}}>Listar Vendedores</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -171,7 +172,7 @@ export default function App() {
         <TextInput
           placeholder='Total Comisión'
           style={styles.inputs}
-          onChangeText={totalComision => settotalComision(totalComision)}
+          onChangeText={totalComision => setTotalComision(totalComision)}
           value={totalComision}
         />
       </View>
@@ -213,5 +214,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height:40,
     marginBottom:10,
+  },
+  inputs: {
+    borderWidth: 2,
+    borderColor: "green",
+    borderRadius: 10,
+    marginTop: 5,
+    minWidth: 200,
+    textAlign: "center",
+    padding: 5,
   }
 })
