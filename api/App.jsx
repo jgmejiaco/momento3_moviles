@@ -24,7 +24,7 @@ export default function App() {
   // }
 
   const saveVendedor = async () => {
-    if (!nombre.trim() || !correoe.trim() || !totalcomision.trim()) {
+    if (!nombre.trim() || !correoe.trim() || !totalComision.trim()) {
       alert("Nombre, Correo y Total Comisión obligatorios");
       return;
     }
@@ -45,7 +45,7 @@ export default function App() {
   };
 
   const updateVendedor = async (id) => {
-    if (!nombre.trim() || !correoe.trim() || !totalcomision.trim()) {
+    if (!nombre.trim() || !correoe.trim() || !totalComision.trim()) {
       alert("Nombre, Correo y Total Comisión obligatorios");
       return;
     }

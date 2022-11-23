@@ -5,7 +5,7 @@ const Venta = mongoose.model('Venta',
 );
 
 const Vendedor = mongoose.model('Vendedor',
-  new mongoose.Schema({ idvend: Number, nombre: String, correoe: String, totalcomision: Number })
+  new mongoose.Schema({ idvend: Number, nombre: String, nombre: String, totalcomision: Number })
 );
 
 module.exports = {
