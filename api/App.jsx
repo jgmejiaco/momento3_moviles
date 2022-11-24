@@ -62,25 +62,26 @@ function VentaScreen({ route }) {
 
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
-  const [idvend,setIdVend] = useState('');
-  const [nombre,setNombre] = useState('');
-  const [correoe,setCorreoE] = useState('');
-  const [totalComision,setTotalComision] = useState('');
+  const [idventa,setIdVenta] = useState('');
+  const [zona,setZona] = useState('');
+  const [fecha,setFecha] = useState('');
+  const [valorventa,setValorVenta] = useState('');
   const url_api = 'http://192.168.1.69:3000/api/vendedor';
 
-  const saveVendedor = async () => {
-    if (!nombre.trim() || !correoe.trim() || !totalComision.trim()) {
-      alert("Nombre, Correo y Total Comisión obligatorios");
+  const saveVenta = async () => {
+    if (!idventa.trim() || !zona.trim() || !fecha.trim() || !valorventa.trim()) {
+      alert("idventa, zona, fecha y valorventa obligatorios");
       return;
     }
     setLoading(true);
     try {
       const response = await axios.post(url_api, {
-        nombre,
-        correoe,
-        totalComision
+        idventa,
+        zona,
+        fecha,
+        valorventa
       });
-      alert("Vendedor agregado correctamente ...")
+      alert("Venta agregada correctamente ...")
     } catch (error) {
       console.log(error)
     }
@@ -89,19 +90,20 @@ function VentaScreen({ route }) {
     }
   };
 
-  const updateVendedor = async (id) => {
-    if (!nombre.trim() || !correoe.trim() || !totalComision.trim()) {
-      alert("Nombre, Correo y Total Comisión obligatorios");
+  const updateVenta = async (id) => {
+    if (!idventa.trim() || !zona.trim() || !fecha.trim() || !valorventa.trim()) {
+      alert("idventa, zona, fecha y valorventa obligatorios");
       return;
     }
     setLoading(true);
     try {
       const response = await axios.put(`${url_api}/${id}`, {
-        nombre,
-        correoe,
-        totalComision
+        idventa,
+        zona,
+        fecha,
+        valorventa
       });
-      alert("Vendedor actualizado correctamente ...")
+      alert("Vendta actualizada correctamente ...")
     } catch (error) {
       console.log(error)
     }
@@ -110,12 +112,12 @@ function VentaScreen({ route }) {
     }
   };
 
-  const deleteVendedor = async (id) => {
+  const deleteVenta = async (id) => {
     setLoading(true);
     try {
-      if (confirm("Está seguro de eliminar el Vendedor")) {
+      if (confirm("Está seguro de eliminar la Venta")) {
         const response = await axios.delete(`${url_api}/${id}`);
-        alert("Vendedor eliminado correctamente ...")  
+        alert("Venta eliminada correctamente ...")  
       }
     } catch (error) {
       console.log(error)
@@ -125,7 +127,7 @@ function VentaScreen({ route }) {
     }
   };
 
-  const getVendedor = async () => {
+  const getVenta = async () => {
     setLoading(true);
     try {
       const response = await axios.get(url_api);
@@ -138,13 +140,14 @@ function VentaScreen({ route }) {
     }
   };
 
-  const getVendedorPorId = async (id) => {
+  const getVentaPorId = async (id) => {
     try{
       const response = await axios.get(`url_api/${id}`);
       setData(response.data) 
-      setNombre(response.data.nombre);
-      setCorreoE(response.data.correoe);
-      setTotalComision(response.data.totalComision);
+      setNombre(response.data.idventa);
+      setCorreoE(response.data.zona);
+      setTotalComision(response.data.fecha);
+      setTotalComision(response.data.valorventa);
     }
     catch(error){
       console.log(error)
@@ -155,72 +158,250 @@ function VentaScreen({ route }) {
   };
 
   useEffect(() => {
-    getVendedor(); // al renderizar
+    getVenta(); // al renderizar
   }, []);
+
+  const onSubmit = data => {
+    setData(data);
+    return(
+      data,
+      console.log(data),
+      console.log(`Número de Cuenta: ${data.idventa}`),
+      console.log(`Número de identificacion: ${data.zona}`),
+      console.log(`Titular de Cuenta: ${data.fecha}`),
+      console.log(`Fecha: ${data.valorventa}`)
+    );
+  };
+
+  // console.log(onSubmit(data));
+
+  const { control, handleSubmit, formState: { errors } } = useForm({
+    defaultValues: {
+      idventa: '',
+      zona: '',
+      fecha: '',
+      valorventa: '',
+    }
+  });
+
+  const handleResult = (data) => {
+    return (
+      <View style={{ marginTop: 20 }}>
+        <Text key={data.idventa} style={styles.text}>
+          Id Venta: {data.idventa}
+        </Text>
+        <Text key={data.identificacion} style={styles.text}>
+          Identificación: {data.identificacion}
+        </Text>
+        <Text key={data.titular} style={styles.text}>
+          titular Cuenta: {data.titular}
+        </Text>
+        <Text key={data.fecha} style={styles.text}>
+          Fecha: {data.fecha}
+        </Text>
+        <Text key={data.saldo} style={styles.text}>
+          Saldo: {data.saldo}
+        </Text>
+      </View>
+    );
+  };
+
+  // ============================================================================================================
+  // ============================================================================================================
+  // ============================================================================================================
 
   return (
     <View style={{ flex: 1, padding: 24 }}>
       <TouchableOpacity
         style={[styles.buttons,{backgroundColor:'blue'}]}
-        onPress={saveVendedor}
+        onPress={saveVenta}
       >
         <Text style={{color:'yellow'}}>Guardar</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={[styles.buttons,{backgroundColor:'orange'}]}
-        onPress={()=>updateVendedor(sid)}
+        onPress={()=>updateVenta(sid)}
       >
         <Text style={{color:'yellow'}}>Actualizar</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={[styles.buttons,{backgroundColor:'red'}]}
-        onPress={()=>deleteVendedor(sid)}
+        onPress={()=>deleteVenta(sid)}
       >
         <Text style={{color:'yellow'}}>Eliminar</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={[styles.buttons,{backgroundColor:'green'}]}
-        onPress={()=>getVendedor()}
+        onPress={()=>getVenta()}
       >
         <Text style={{color:'yellow'}}>Listar Ventas</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={[styles.buttons,{backgroundColor:'green'}]}
-        onPress={()=>getVendedorPorId(sid)}
+        onPress={()=>getVentaPorId(sid)}
       >
         <Text style={{color:'yellow'}}>Buscar Venta por Id</Text>
       </TouchableOpacity>
 
+      {/* ============================================================================================================ */}
+      {/* ============================================================================================================ */}
+
       <View>
-        <TextInput
+        <Controller
+          control={control}
+          rules={{
+            required: true,
+            pattern: /[0-9]+/g,
+            // maxLength: 11,
+            // minLength: 10
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              style={[styles.inputs, { borderColor: errors.idventa?.type == 'required' || errors.idventa?.type == 'pattern' ? 'red' : 'green' }]}
+              onChange={onChange}
+              onBlur={onBlur}
+              value={value}
+              placeholder='id Venta'
+              // onChangeText={idventa => setIdVenta(idventa)}
+              // value={idventa}
+            />
+          )}
+          name='idventa'
+        />
+        {errors.idventa?.type == 'required' && <Text style={{ color: 'red' }}>El idventa es obligatorio</Text>}
+        {errors.idventa?.type == 'pattern' && <Text style={{ color: 'red' }}>Solo se permiten números</Text>}
+        {/* {errors.idventa?.type == 'maxLength' && <Text style={{ color: 'red' }}>Máximo 11 caracteres</Text>} */}
+        {/* {errors.idventa?.type == 'minLength' && <Text style={{ color: 'red' }}>Mínimo 10 caracteres</Text>} */}
+
+        
+
+        {/* setDatoCuenta(mcuenta) */}
+        {/* ================================================= */}
+        {/* <TextInput
           placeholder='id Venta'
           style={styles.inputs}
-          onChangeText={idvend => setIdVend(idvend)}
-          value={idvend}
+          onChangeText={idvend => setIdVenta(idventa)}
+          value={idventa}
+        /> */}
+
+        {/* ============================================================================================================ */}
+        {/* ============================================================================================================ */}
+
+        <Controller
+          control={control}
+          rules={{
+            required: true,
+            pattern: /[a-z/A-Z]+/g,
+            // maxLength: 11,
+            // minLength: 10
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              style={[styles.inputs, { borderColor: errors.zona?.type == 'required' || errors.zona?.type == 'pattern' ? 'red' : 'green' }]}
+              onChange={onChange}
+              onBlur={onBlur}
+              value={value}
+              placeholder='Norte o Sur'
+              // onChangeText={zona => setZona(zona)}
+              // value={zona}
+            />
+          )}
+          name='zona'
         />
-        <TextInput
+        {errors.idventa?.type == 'required' && <Text style={{ color: 'red' }}>El idventa es obligatorio</Text>}
+        {errors.idventa?.type == 'pattern' && <Text style={{ color: 'red' }}>Solo se permiten números</Text>}
+        {/* {errors.idventa?.type == 'maxLength' && <Text style={{ color: 'red' }}>Máximo 11 caracteres</Text>} */}
+        {/* {errors.idventa?.type == 'minLength' && <Text style={{ color: 'red' }}>Mínimo 10 caracteres</Text>} */}
+
+        {/* <TextInput
           placeholder='Norte o Sur'
           style={styles.inputs}
-          onChangeText={nombre => setNombre(nombre)}
-          value={nombre}
+          onChangeText={zona => setZona(zona)}
+          value={zona}
+        /> */}
+
+        {/* ============================================================================================================ */}
+        {/* ============================================================================================================ */}
+
+        <Controller
+          control={control}
+          rules={{
+            required: true,
+            pattern: /([1-2]{1}[0-9]{3}[\/](01|([0]{1}[1-9]{1})|10|11|12)[\/](01|([0]{1}[1-9]{1})|([1-2]{1}[1-9]{1})|10|20|30|31|32))/g,
+            maxLength: 10,
+            minLength: 10
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              style={[styles.inputs, { borderColor: errors.fecha?.type == 'minLength' || errors.fecha?.type == 'maxLength' || errors.fecha?.type == 'required' || errors.fecha?.type == 'pattern' ? 'red' : 'green' }]}
+              onChange={onChange}
+              onBlur={onBlur}
+              value={value}
+              placeholder="(AAAA/MM/DD)"
+              // onChangeText={fecha => setFecha(fecha)}
+              // value={fecha}
+            />
+          )}
+          name='fecha'
         />
-        <TextInput
+        {errors.fecha?.type == 'required' && <Text style={{ color: 'red' }}>El idventa es obligatorio</Text>}
+        {errors.fecha?.type == 'pattern' && <Text style={{ color: 'red' }}>Solo se permiten números</Text>}
+        {/* {errors.idventa?.type == 'maxLength' && <Text style={{ color: 'red' }}>Máximo 11 caracteres</Text>} */}
+        {/* {errors.idventa?.type == 'minLength' && <Text style={{ color: 'red' }}>Mínimo 10 caracteres</Text>} */}
+
+        
+
+        {/* <TextInput
           placeholder='Fecha'
           style={styles.inputs}
-          onChangeText={correoe => setCorreoE(correoe)}
-          value={correoe}
+          onChangeText={fecha => setFecha(fecha)}
+          value={fecha}
+        /> */}
+
+
+        {/* ============================================================================================================ */}
+        {/* ============================================================================================================ */}
+
+        <Controller
+          control={control}
+          rules={{
+            required: true,
+            pattern: /[0-9]+/g,
+            // maxLength: 10,
+            minLength: 6
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              style={[styles.inputs, { borderColor: errors.valorventa?.type == 'minLength' || errors.valorventa?.type == 'required' || errors.valorventa?.type == 'pattern' ? 'red' : 'green' }]}
+              onChange={onChange}
+              onBlur={onBlur}
+              value={value}
+              placeholder="Valor Venta"
+              // onChangeText={valorventa => setValorVenta(valorventa)}
+              // value={valorventa}
+            />
+          )}
+          name='valorventa'
         />
-        <TextInput
+        {errors.valorventa?.type == 'required' && <Text style={{ color: 'red' }}>El idventa es obligatorio</Text>}
+        {errors.valorventa?.type == 'pattern' && <Text style={{ color: 'red' }}>Solo se permiten números</Text>}
+        {/* {errors.idventa?.type == 'maxLength' && <Text style={{ color: 'red' }}>Máximo 11 caracteres</Text>} */}
+        {/* {errors.idventa?.type == 'minLength' && <Text style={{ color: 'red' }}>Mínimo 10 caracteres</Text>} */}
+
+        {/* <TextInput
           placeholder='Valor Venta'
           style={styles.inputs}
-          onChangeText={totalComision => setTotalComision(totalComision)}
-          value={totalComision}
-        />
+          onChangeText={valorventa => setValorVenta(valorventa)}
+          value={valorventa}
+        /> */}
       </View>
+
+      {/* ============================================================================================================ */}
+      {/* ============================================================================================================ */}
 
       {isLoading ? <ActivityIndicator size="large" color="black" /> : (
         <FlatList
@@ -230,12 +411,12 @@ function VentaScreen({ route }) {
             <TouchableOpacity
               style={[styles.buttons, {backgroundColor: item.id % 2 == 1 ? 'orange' : 'gray'}]}
               onPress={()=>{
-                if (confirm(`Está seguro de eliminar el vendedor ${item.nombre} ${item.apellidos}?`)){
-                  alert("Vendedor borrado (simulado)")
+                if (confirm(`Está seguro de eliminar la venta ${item.idventa}?`)){
+                  alert("Venta borrada (simulado)")
                 }
               }}
             >
-              <Text>{item.nombre}</Text>
+              <Text>{item.idventa}</Text>
             </TouchableOpacity>
 
           )}
@@ -244,6 +425,7 @@ function VentaScreen({ route }) {
     </View>
   );
 }
+//-------------------------------------FIN VENTA--------------------------------------------//
 
 // =======================================================================================================
 // =======================================================================================================
