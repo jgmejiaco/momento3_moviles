@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
 const Venta = mongoose.model('Venta',
-  new mongoose.Schema({ idvend: Number, zona: String, fecha: String, valorventa: Number })
+  new mongoose.Schema({ idventa: String, zona: String, fecha: String, valorventa: Number })
 );
 
 const Vendedor = mongoose.model('Vendedor',
-  new mongoose.Schema({ idvend: Number, nombre: String, nombre: String, totalcomision: Number })
+  new mongoose.Schema({ idvend: String, nombre: String, nombre: String, totalcomision: Number })
 );
 
 module.exports = {

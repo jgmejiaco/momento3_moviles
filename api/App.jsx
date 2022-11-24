@@ -66,7 +66,7 @@ function VentaScreen({ route }) {
   const [zona,setZona] = useState('');
   const [fecha,setFecha] = useState('');
   const [valorventa,setValorVenta] = useState('');
-  const url_api = 'http://192.168.1.69:3000/api/vendedor';
+  const url_api = 'http://172.18.48.57:3000/api/vendedor';
 
   const saveVenta = async () => {
     if (!idventa.trim() || !zona.trim() || !fecha.trim() || !valorventa.trim()) {
@@ -81,6 +81,8 @@ function VentaScreen({ route }) {
         fecha,
         valorventa
       });
+      setData(response.data)
+      console.log(response);
       alert("Venta agregada correctamente ...")
     } catch (error) {
       console.log(error)
@@ -103,7 +105,7 @@ function VentaScreen({ route }) {
         fecha,
         valorventa
       });
-      alert("Vendta actualizada correctamente ...")
+      alert("Venta actualizada correctamente ...")
     } catch (error) {
       console.log(error)
     }
@@ -161,17 +163,17 @@ function VentaScreen({ route }) {
     getVenta(); // al renderizar
   }, []);
 
-  const onSubmit = data => {
-    setData(data);
-    return(
-      data,
-      console.log(data),
-      console.log(`Número de Cuenta: ${data.idventa}`),
-      console.log(`Número de identificacion: ${data.zona}`),
-      console.log(`Titular de Cuenta: ${data.fecha}`),
-      console.log(`Fecha: ${data.valorventa}`)
-    );
-  };
+  // const onSubmit = data => {
+  //   setData(data);
+  //   return(
+  //     data,
+  //     console.log(data),
+  //     console.log(`Número de Cuenta: ${data.idventa}`),
+  //     console.log(`Número de identificacion: ${data.zona}`),
+  //     console.log(`Titular de Cuenta: ${data.fecha}`),
+  //     console.log(`Fecha: ${data.valorventa}`)
+  //   );
+  // };
 
   // console.log(onSubmit(data));
 
@@ -184,27 +186,27 @@ function VentaScreen({ route }) {
     }
   });
 
-  const handleResult = (data) => {
-    return (
-      <View style={{ marginTop: 20 }}>
-        <Text key={data.idventa} style={styles.text}>
-          Id Venta: {data.idventa}
-        </Text>
-        <Text key={data.identificacion} style={styles.text}>
-          Identificación: {data.identificacion}
-        </Text>
-        <Text key={data.titular} style={styles.text}>
-          titular Cuenta: {data.titular}
-        </Text>
-        <Text key={data.fecha} style={styles.text}>
-          Fecha: {data.fecha}
-        </Text>
-        <Text key={data.saldo} style={styles.text}>
-          Saldo: {data.saldo}
-        </Text>
-      </View>
-    );
-  };
+  // const handleResult = (data) => {
+  //   return (
+  //     <View style={{ marginTop: 20 }}>
+  //       <Text key={data.idventa} style={styles.text}>
+  //         Id Venta: {data.idventa}
+  //       </Text>
+  //       <Text key={data.zona} style={styles.text}>
+  //         zona: {data.zona}
+  //       </Text>
+  //       <Text key={data.fecha} style={styles.text}>
+  //         fecha: {data.fecha}
+  //       </Text>
+  //       <Text key={data.valorventa} style={styles.text}>
+  //         Fecha: {data.valorventa}
+  //       </Text>
+  //       <Text key={data.saldo} style={styles.text}>
+  //         Saldo: {data.saldo}
+  //       </Text>
+  //     </View>
+  //   );
+  // };
 
   // ============================================================================================================
   // ============================================================================================================
@@ -262,12 +264,12 @@ function VentaScreen({ route }) {
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
               style={[styles.inputs, { borderColor: errors.idventa?.type == 'required' || errors.idventa?.type == 'pattern' ? 'red' : 'green' }]}
-              onChange={onChange}
+              // onChange={onChange}
               onBlur={onBlur}
-              value={value}
+              // value={value}
               placeholder='id Venta'
-              // onChangeText={idventa => setIdVenta(idventa)}
-              // value={idventa}
+              onChangeText={idventa => setIdVenta(idventa)}
+              value={idventa}
             />
           )}
           name='idventa'
@@ -302,12 +304,12 @@ function VentaScreen({ route }) {
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
               style={[styles.inputs, { borderColor: errors.zona?.type == 'required' || errors.zona?.type == 'pattern' ? 'red' : 'green' }]}
-              onChange={onChange}
+              // onChange={onChange}
               onBlur={onBlur}
-              value={value}
+              // value={value}
               placeholder='Norte o Sur'
-              // onChangeText={zona => setZona(zona)}
-              // value={zona}
+              onChangeText={zona => setZona(zona)}
+              value={zona}
             />
           )}
           name='zona'
@@ -338,12 +340,12 @@ function VentaScreen({ route }) {
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
               style={[styles.inputs, { borderColor: errors.fecha?.type == 'minLength' || errors.fecha?.type == 'maxLength' || errors.fecha?.type == 'required' || errors.fecha?.type == 'pattern' ? 'red' : 'green' }]}
-              onChange={onChange}
+              // onChange={onChange}
               onBlur={onBlur}
-              value={value}
+              // value={value}
               placeholder="(AAAA/MM/DD)"
-              // onChangeText={fecha => setFecha(fecha)}
-              // value={fecha}
+              onChangeText={fecha => setFecha(fecha)}
+              value={fecha}
             />
           )}
           name='fecha'
@@ -377,12 +379,12 @@ function VentaScreen({ route }) {
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
               style={[styles.inputs, { borderColor: errors.valorventa?.type == 'minLength' || errors.valorventa?.type == 'required' || errors.valorventa?.type == 'pattern' ? 'red' : 'green' }]}
-              onChange={onChange}
+              // onChange={onChange}
               onBlur={onBlur}
-              value={value}
+              // value={value}
               placeholder="Valor Venta"
-              // onChangeText={valorventa => setValorVenta(valorventa)}
-              // value={valorventa}
+              onChangeText={valorventa => setValorVenta(valorventa)}
+              value={valorventa}
             />
           )}
           name='valorventa'

@@ -60,7 +60,7 @@ exports.deleteVenta = (req, res) =>
 exports.updateVenta = (req, res) =>
     Venta.findOneAndUpdate(
         { _id: req.params.id },
-        { $set: { idvend: req.body.idvend, zona: req.body.zona, fecha: req.body.fecha, valorventa: req.body.valorventa } }, 
+        { $set: { idventa: req.body.idventa, zona: req.body.zona, fecha: req.body.fecha, valorventa: req.body.valorventa } }, 
         (err, data) => {
             if (err) res.json({ error: err });
             else     res.json(data);
@@ -68,7 +68,7 @@ exports.updateVenta = (req, res) =>
     );
 
 exports.createVenta = (req, res) =>
-    new Venta({ idvend: req.body.idvend, zona: req.body.zona, fecha: req.body.fecha, valorventa: req.body.valorventa })
+    new Venta({ idventa: req.body.idventa, zona: req.body.zona, fecha: req.body.fecha, valorventa: req.body.valorventa })
     .save((err, data) => {
         if (err) res.json({ error: err });
         else     res.json(data);
