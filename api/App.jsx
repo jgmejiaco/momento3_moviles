@@ -62,27 +62,31 @@ function VentaScreen({ route }) {
 
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
-  const [idventa,setIdVenta] = useState('');
-  const [zona,setZona] = useState('');
-  const [fecha,setFecha] = useState('');
-  const [valorventa,setValorVenta] = useState('');
-  const url_api = 'http://172.18.48.57:3000/api/vendedor';
+  // const [idventa,setIdVenta] = useState('');
+  // const [zona,setZona] = useState('');
+  // const [fecha,setFecha] = useState('');
+  // const [valorventa,setValorVenta] = useState('');
+  const url_api_venta = 'http://172.18.48.57:3000/api/venta';
 
-  const saveVenta = async () => {
-    if (!idventa.trim() || !zona.trim() || !fecha.trim() || !valorventa.trim()) {
-      alert("idventa, zona, fecha y valorventa obligatorios");
-      return;
-    }
+  const saveVenta = (data) => {
+    // if (!idventa.trim() || !zona.trim() || !fecha.trim() || !valorventa.trim()) {
+    //   alert("idventa, zona, fecha y valorventa obligatorios");
+    //   return;
+    // }
     setLoading(true);
+    let idventa = data.idventa;
+    let zona = data.idventa;
+    let fecha = data.fecha;
+    let valorventa = data.valorventa;
     try {
-      const response = await axios.post(url_api, {
+      const response = axios.post(url_api_venta, {
         idventa,
         zona,
         fecha,
         valorventa
       });
       setData(response.data)
-      console.log(response);
+      console.log(data.idventa);
       alert("Venta agregada correctamente ...")
     } catch (error) {
       console.log(error)
@@ -94,12 +98,12 @@ function VentaScreen({ route }) {
 
   const updateVenta = async (id) => {
     if (!idventa.trim() || !zona.trim() || !fecha.trim() || !valorventa.trim()) {
-      alert("idventa, zona, fecha y valorventa obligatorios");
+      // alert("idventa, zona, fecha y valorventa obligatorios");
       return;
     }
     setLoading(true);
     try {
-      const response = await axios.put(`${url_api}/${id}`, {
+      const response = await axios.put(`${url_api_venta}/${id}`, {
         idventa,
         zona,
         fecha,
@@ -118,7 +122,7 @@ function VentaScreen({ route }) {
     setLoading(true);
     try {
       if (confirm("Está seguro de eliminar la Venta")) {
-        const response = await axios.delete(`${url_api}/${id}`);
+        const response = await axios.delete(`${url_api_venta}/${id}`);
         alert("Venta eliminada correctamente ...")  
       }
     } catch (error) {
@@ -132,7 +136,7 @@ function VentaScreen({ route }) {
   const getVenta = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(url_api);
+      const response = await axios.get(url_api_venta);
       setData(response.data)
     } catch (error) {
       console.log(error)
@@ -144,7 +148,7 @@ function VentaScreen({ route }) {
 
   const getVentaPorId = async (id) => {
     try{
-      const response = await axios.get(`url_api/${id}`);
+      const response = await axios.get(`url_api_venta/${id}`);
       setData(response.data) 
       setNombre(response.data.idventa);
       setCorreoE(response.data.zona);
@@ -163,17 +167,17 @@ function VentaScreen({ route }) {
     getVenta(); // al renderizar
   }, []);
 
-  // const onSubmit = data => {
-  //   setData(data);
-  //   return(
-  //     data,
-  //     console.log(data),
-  //     console.log(`Número de Cuenta: ${data.idventa}`),
-  //     console.log(`Número de identificacion: ${data.zona}`),
-  //     console.log(`Titular de Cuenta: ${data.fecha}`),
-  //     console.log(`Fecha: ${data.valorventa}`)
-  //   );
-  // };
+  const onSubmit = data => {
+    setData(data);
+    return(
+      data,
+      console.log(data),
+      console.log(`idventa: ${data.idventa}`),
+      console.log(`zona: ${data.zona}`),
+      console.log(`fecha: ${data.fecha}`),
+      console.log(`valorventa: ${data.valorventa}`)
+    );
+  };
 
   // console.log(onSubmit(data));
 
@@ -216,7 +220,7 @@ function VentaScreen({ route }) {
     <View style={{ flex: 1, padding: 24 }}>
       <TouchableOpacity
         style={[styles.buttons,{backgroundColor:'blue'}]}
-        onPress={saveVenta}
+        onPress={handleSubmit(saveVenta)}
       >
         <Text style={{color:'yellow'}}>Guardar</Text>
       </TouchableOpacity>
@@ -264,12 +268,12 @@ function VentaScreen({ route }) {
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
               style={[styles.inputs, { borderColor: errors.idventa?.type == 'required' || errors.idventa?.type == 'pattern' ? 'red' : 'green' }]}
-              // onChange={onChange}
+              onChange={onChange}
               onBlur={onBlur}
-              // value={value}
+              value={value}
               placeholder='id Venta'
-              onChangeText={idventa => setIdVenta(idventa)}
-              value={idventa}
+              // onChangeText={idventa => setIdVenta(idventa)}
+              // value={idventa}
             />
           )}
           name='idventa'
@@ -304,18 +308,18 @@ function VentaScreen({ route }) {
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
               style={[styles.inputs, { borderColor: errors.zona?.type == 'required' || errors.zona?.type == 'pattern' ? 'red' : 'green' }]}
-              // onChange={onChange}
+              onChange={onChange}
               onBlur={onBlur}
-              // value={value}
+              value={value}
               placeholder='Norte o Sur'
-              onChangeText={zona => setZona(zona)}
-              value={zona}
+              // onChangeText={zona => setZona(zona)}
+              // value={zona}
             />
           )}
           name='zona'
         />
-        {errors.idventa?.type == 'required' && <Text style={{ color: 'red' }}>El idventa es obligatorio</Text>}
-        {errors.idventa?.type == 'pattern' && <Text style={{ color: 'red' }}>Solo se permiten números</Text>}
+        {errors.zona?.type == 'required' && <Text style={{ color: 'red' }}>El zona es obligatorio</Text>}
+        {errors.zona?.type == 'pattern' && <Text style={{ color: 'red' }}>Solo se permiten letras</Text>}
         {/* {errors.idventa?.type == 'maxLength' && <Text style={{ color: 'red' }}>Máximo 11 caracteres</Text>} */}
         {/* {errors.idventa?.type == 'minLength' && <Text style={{ color: 'red' }}>Mínimo 10 caracteres</Text>} */}
 
@@ -340,18 +344,18 @@ function VentaScreen({ route }) {
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
               style={[styles.inputs, { borderColor: errors.fecha?.type == 'minLength' || errors.fecha?.type == 'maxLength' || errors.fecha?.type == 'required' || errors.fecha?.type == 'pattern' ? 'red' : 'green' }]}
-              // onChange={onChange}
+              onChange={onChange}
               onBlur={onBlur}
-              // value={value}
+              value={value}
               placeholder="(AAAA/MM/DD)"
-              onChangeText={fecha => setFecha(fecha)}
-              value={fecha}
+              // onChangeText={fecha => setFecha(fecha)}
+              // value={fecha}
             />
           )}
           name='fecha'
         />
-        {errors.fecha?.type == 'required' && <Text style={{ color: 'red' }}>El idventa es obligatorio</Text>}
-        {errors.fecha?.type == 'pattern' && <Text style={{ color: 'red' }}>Solo se permiten números</Text>}
+        {errors.fecha?.type == 'required' && <Text style={{ color: 'red' }}>El fecha es obligatorio</Text>}
+        {errors.fecha?.type == 'pattern' && <Text style={{ color: 'red' }}>Solo se permiten fecha</Text>}
         {/* {errors.idventa?.type == 'maxLength' && <Text style={{ color: 'red' }}>Máximo 11 caracteres</Text>} */}
         {/* {errors.idventa?.type == 'minLength' && <Text style={{ color: 'red' }}>Mínimo 10 caracteres</Text>} */}
 
@@ -374,22 +378,22 @@ function VentaScreen({ route }) {
             required: true,
             pattern: /[0-9]+/g,
             // maxLength: 10,
-            minLength: 6
+            // minLength: 6
           }}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
               style={[styles.inputs, { borderColor: errors.valorventa?.type == 'minLength' || errors.valorventa?.type == 'required' || errors.valorventa?.type == 'pattern' ? 'red' : 'green' }]}
-              // onChange={onChange}
+              onChange={onChange}
               onBlur={onBlur}
-              // value={value}
+              value={value}
               placeholder="Valor Venta"
-              onChangeText={valorventa => setValorVenta(valorventa)}
-              value={valorventa}
+              // onChangeText={valorventa => setValorVenta(valorventa)}
+              // value={valorventa}
             />
           )}
           name='valorventa'
         />
-        {errors.valorventa?.type == 'required' && <Text style={{ color: 'red' }}>El idventa es obligatorio</Text>}
+        {errors.valorventa?.type == 'required' && <Text style={{ color: 'red' }}>El valor venta es obligatorio</Text>}
         {errors.valorventa?.type == 'pattern' && <Text style={{ color: 'red' }}>Solo se permiten números</Text>}
         {/* {errors.idventa?.type == 'maxLength' && <Text style={{ color: 'red' }}>Máximo 11 caracteres</Text>} */}
         {/* {errors.idventa?.type == 'minLength' && <Text style={{ color: 'red' }}>Mínimo 10 caracteres</Text>} */}
@@ -436,11 +440,11 @@ function VentaScreen({ route }) {
 function VendedorScreen() {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
-  const [idvend,setIdVend] = useState('');
-  const [nombre,setNombre] = useState('');
-  const [correoe,setCorreoE] = useState('');
-  const [totalComision,setTotalComision] = useState('');
-  const url_api = 'http://192.168.1.69:3000/api/vendedor';
+  // const [idvend,setIdVend] = useState('');
+  // const [nombre,setNombre] = useState('');
+  // const [correoe,setCorreoE] = useState('');
+  // const [totalComision,setTotalComision] = useState('');
+  const url_api_vendedor = 'http://192.168.1.69:3000/api/vendedor';
 
   const saveVendedor = async () => {
     if (!nombre.trim() || !correoe.trim() || !totalComision.trim()) {
@@ -449,7 +453,7 @@ function VendedorScreen() {
     }
     setLoading(true);
     try {
-      const response = await axios.post(url_api, {
+      const response = await axios.post(url_api_vendedor, {
         nombre,
         correoe,
         totalComision
@@ -470,7 +474,7 @@ function VendedorScreen() {
     }
     setLoading(true);
     try {
-      const response = await axios.put(`${url_api}/${id}`, {
+      const response = await axios.put(`${url_api_vendedor}/${id}`, {
         nombre,
         correoe,
         totalComision
@@ -488,7 +492,7 @@ function VendedorScreen() {
     setLoading(true);
     try {
       if (confirm("Está seguro de eliminar el Vendedor")) {
-        const response = await axios.delete(`${url_api}/${id}`);
+        const response = await axios.delete(`${url_api_vendedor}/${id}`);
         alert("Vendedor eliminado correctamente ...")  
       }
     } catch (error) {
@@ -502,7 +506,7 @@ function VendedorScreen() {
   const getVendedor = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(url_api);
+      const response = await axios.get(url_api_vendedor);
       setData(response.data)
     } catch (error) {
       console.log(error)
@@ -514,7 +518,7 @@ function VendedorScreen() {
 
   const getVendedorPorId = async (id) => {
     try{
-      const response = await axios.get(`url_api/${id}`);
+      const response = await axios.get(`url_api_vendedor/${id}`);
       setData(response.data) 
       setNombre(response.data.nombre);
       setCorreoE(response.data.correoe);
